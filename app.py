@@ -2,11 +2,13 @@ import datetime
 import io
 import json
 import os
+
 from flask import Flask, render_template, request, redirect, Response, send_file, abort
 
 app = Flask(__name__)
 
-resume_pdf_link = 'https://drive.google.com/open?id=0B2BrrDjIiyvmcWp5T194cy00UmM'
+
+#resume_pdf_link = 'https://drive.google.com/open?id=0B2BrrDjIiyvmcWp5T194cy00UmM'
 
 
 @app.route('/')
@@ -109,23 +111,6 @@ def project(title):
     return render_template('project.html', project=selected)
 
 
-@app.route('/podcasts/<filename>')
-def podcast(filename):
-    if filename.endswith('.mp3'):
-        return send_file(get_static_file(f'static/podcasts/{filename}'))
-    return abort(404)
-
-
-@app.route('/podcasts/index.xml')
-def podcast_rss():
-    return Response(podcast_feed_generator().rss_str(), mimetype='application/rss+xml')
-
-
-@app.route('/podcasts')
-def podcasts():
-    podcasts = get_static_json("static/podcasts/podcasts.json")
-    return render_template('podcasts.html', podcasts=podcasts)
-
 
 @app.errorhandler(404)
 def page_not_found(e):
@@ -139,7 +124,3 @@ def get_static_file(path):
 
 def get_static_json(path):
     return json.load(open(get_static_file(path)))
-
-if __name__ == "__main__":
-    print("running py app")
-    app.run(host="127.0.0.1", port=5000, debug=True)
